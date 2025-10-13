@@ -1,4 +1,0 @@
-        # Debug: Print which model and prompt is being used
-        print(f"\n=== BASE MODEL (TinyLlama) ===")
-        print(f"Prompt: {base_prompt[:200]}...")
-        base_output, base_time = generate_with_gguf(
