@@ -58,7 +58,7 @@ def load_models():
             print(f"Finetuned model not found at {FINETUNED_MODEL_PATH}")
             return False
         
-        print("Loading TinyLllam base model...")
+        print("Loading TinyLlama base model...")
         base_model = Llama(
             model_path=BASE_MODEL_PATH,
             n_gpu_layers=-1,  # Use GPU for all layers
@@ -95,32 +95,44 @@ def create_pii_prompt(text: str, is_finetuned: bool = False) -> str:
         # Qwen format
         prompt = f"<|im_start|>system\n{system}<|im_end|>\n<|im_start|>user\n{instruction}<|im_end|>\n<|im_start|>assistant\n"
     else:
-        # TinyLlama base model - use TinyLlama format
-        instruction = f"Identify and replace all personally identifiable information (PII) in this text with [MASKED] labels:\n\n{text}"
-        
-        # TinyLlama format
-        prompt = f"<|system|>\nReplace personal information with [MASKED]</s>\n<|user|>\n{instruction}</s>\n<|assistant|>\n"
+        # TinyLlama base model - very simple English-only instruction
+        prompt = f"<|system|>\nYou only speak English. Respond in English.</s>\n<|user|>\nMask PII (names, SSN, phone, email, address) with [MASKED]:\n\n{text}</s>\n<|assistant|>\n"
     
     return prompt
 
-def generate_with_gguf(model, prompt: str, max_tokens: int = 256, temperature: float = 0.1, is_gemma: bool = False) -> tuple:
+def generate_with_gguf(model, prompt: str, max_tokens: int = 256, temperature: float = 0.1, model_type: str = "tinyllama") -> tuple:
     """Generate masked text using GGUF model"""
     start_time = time.time()
     
     try:
         # Different stop tokens for different models
-        if is_gemma:
-            stop_tokens = ["<end_of_turn>", "<start_of_turn>", "\n\n"]
-        else:
-            stop_tokens = ["<|im_end|>", "<|im_start|>", "\n\n"]
+        if model_type == "qwen":
+            stop_tokens = ["<|im_end|>", "<|im_start|>"]
+        else:  # tinyllama
+            stop_tokens = ["</s>", "<|user|>", "<|system|>"]
         
-        response = model(
-            prompt,
-            max_tokens=max_tokens,
-            temperature=temperature,
-            stop=stop_tokens,
-            echo=False  # Don't include prompt in response
-        )
+        # Adjust generation parameters based on model
+        if model_type == "tinyllama":
+            # More aggressive settings to force English
+            response = model(
+                prompt,
+                max_tokens=max_tokens,
+                temperature=0.3,  # Slightly higher for more variety
+                top_p=0.9,
+                top_k=40,
+                stop=stop_tokens,
+                echo=False,
+                repeat_penalty=1.15  # Higher penalty to avoid repetition
+            )
+        else:
+            response = model(
+                prompt,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                stop=stop_tokens,
+                echo=False,
+                repeat_penalty=1.1
+            )
         
         output = response['choices'][0]['text'].strip()
         elapsed_time = time.time() - start_time
@@ -176,7 +188,7 @@ async def mask_pii(request: PIIRequest):
             base_prompt,
             request.max_tokens,
             request.temperature,
-            is_gemma=True
+            model_type="tinyllama"
         )
         
         # Generate with finetuned Qwen model
@@ -188,7 +200,7 @@ async def mask_pii(request: PIIRequest):
             finetuned_prompt,
             request.max_tokens,
             request.temperature,
-            is_gemma=False
+            model_type="qwen"
         )
         
         return PIIResponse(
