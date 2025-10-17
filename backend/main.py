@@ -95,8 +95,11 @@ def create_pii_prompt(text: str, is_finetuned: bool = False) -> str:
         # Qwen format
         prompt = f"<|im_start|>system\n{system}<|im_end|>\n<|im_start|>user\n{instruction}<|im_end|>\n<|im_start|>assistant\n"
     else:
-        # TinyLlama base model - very simple English-only instruction
-        prompt = f"<|system|>\nYou only speak English. Respond in English.</s>\n<|user|>\nMask PII (names, SSN, phone, email, address) with [MASKED]:\n\n{text}</s>\n<|assistant|>\n"
+        # TinyLlama base model - use few-shot example to guide behavior
+        example_input = "John Smith lives at 123 Main St. His SSN is 123-45-6789."
+        example_output = "[NAME] lives at [ADDRESS]. His SSN is [SSN]."
+        
+        prompt = f"<|system|>\nReplace personal information with [NAME], [SSN], [PHONE], [EMAIL], [ADDRESS], [DATE].</s>\n<|user|>\nInput: {example_input}\nOutput: {example_output}\n\nInput: {text}\nOutput:</s>\n<|assistant|>\n"
     
     return prompt
 
