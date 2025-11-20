@@ -6,13 +6,11 @@ echo "🔒 PII Masking Demo (Remote Access)"
 echo "======================================"
 echo ""
 
-# Get the server IP address
-SERVER_IP=$(hostname -I | awk '{print $1}')
-if [ -z "$SERVER_IP" ]; then
-    SERVER_IP="xxx.xxx.xx.xxx"  # Fallback to your provided IP
-fi
+# Get the hostname/IP of the Linux server
+HOSTNAME=$(hostname -I | awk '{print $1}')
 
-echo "Server IP: $SERVER_IP"
+echo "Server Information:"
+echo "  Hostname/IP: $HOSTNAME"
 echo ""
 
 # Kill any existing processes on the ports
