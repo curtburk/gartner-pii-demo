@@ -9,7 +9,7 @@ echo ""
 # Get the server IP address
 SERVER_IP=$(hostname -I | awk '{print $1}')
 if [ -z "$SERVER_IP" ]; then
-    SERVER_IP="192.168.10.117"  # Fallback to your provided IP
+    SERVER_IP="xxx.xxx.xx.xxx"  # Fallback to your provided IP
 fi
 
 echo "Server IP: $SERVER_IP"
