@@ -484,7 +484,7 @@
     </div>
     
     <script>
-        const API_URL = 'http://192.168.10.117:8000';
+        const API_URL = 'http://192.168.10.123:8000';
         let modelsLoaded = false;
         
         // Sample texts
@@ -561,52 +561,67 @@
         }
         
         // Format output with colored tags
-        function formatOutput(text) {
-            return text
-                // Generic MASKED tag (used by base model)
-                .replace(/\[MASKED\]/g, '<span class="pii-tag id">[MASKED]</span>')
-                
-                // Standard tags
-                .replace(/\[NAME\]/g, '<span class="pii-tag name">[NAME]</span>')
-                .replace(/\[PHONE\]/g, '<span class="pii-tag phone">[PHONE]</span>')
-                .replace(/\[EMAIL\]/g, '<span class="pii-tag email">[EMAIL]</span>')
-                .replace(/\[SSN\]/g, '<span class="pii-tag ssn">[SSN]</span>')
-                .replace(/\[ADDRESS\]/g, '<span class="pii-tag address">[ADDRESS]</span>')
-                .replace(/\[DATE\]/g, '<span class="pii-tag date">[DATE]</span>')
-                .replace(/\[CREDIT_CARD\]/g, '<span class="pii-tag credit_card">[CREDIT_CARD]</span>')
-                .replace(/\[ID\]/g, '<span class="pii-tag id">[ID]</span>')
-                
-                // Variations from finetuned model
-                .replace(/\[PHONE_NUMBER\]/g, '<span class="pii-tag phone">[PHONE_NUMBER]</span>')
-                .replace(/\[EMAIL_ADDRESS\]/g, '<span class="pii-tag email">[EMAIL_ADDRESS]</span>')
-                .replace(/\[STREET_ADDRESS\]/g, '<span class="pii-tag address">[STREET_ADDRESS]</span>')
-                .replace(/\[CITY\]/g, '<span class="pii-tag address">[CITY]</span>')
-                .replace(/\[STATE\]/g, '<span class="pii-tag address">[STATE]</span>')
-                .replace(/\[ZIP_CODE\]/g, '<span class="pii-tag address">[ZIP_CODE]</span>')
-                .replace(/\[ZIP\]/g, '<span class="pii-tag address">[ZIP]</span>')
-                
-                // Additional common variations
-                .replace(/\[PERSON\]/g, '<span class="pii-tag name">[PERSON]</span>')
-                .replace(/\[LOCATION\]/g, '<span class="pii-tag address">[LOCATION]</span>')
-                .replace(/\[DOB\]/g, '<span class="pii-tag date">[DOB]</span>')
-                .replace(/\[BIRTH_DATE\]/g, '<span class="pii-tag date">[BIRTH_DATE]</span>')
-                .replace(/\[DATE_OF_BIRTH\]/g, '<span class="pii-tag date">[DATE_OF_BIRTH]</span>')
-                .replace(/\[SOCIAL_SECURITY\]/g, '<span class="pii-tag ssn">[SOCIAL_SECURITY]</span>')
-                .replace(/\[CREDIT\]/g, '<span class="pii-tag credit_card">[CREDIT]</span>')
-                .replace(/\[CC\]/g, '<span class="pii-tag credit_card">[CC]</span>')
-                .replace(/\[ID_NUMBER\]/g, '<span class="pii-tag id">[ID_NUMBER]</span>')
-                .replace(/\[MEDICAL_RECORD\]/g, '<span class="pii-tag id">[MEDICAL_RECORD]</span>')
-                .replace(/\[MRN\]/g, '<span class="pii-tag id">[MRN]</span>')
-                .replace(/\[ACCOUNT\]/g, '<span class="pii-tag id">[ACCOUNT]</span>')
-                .replace(/\[LICENSE\]/g, '<span class="pii-tag id">[LICENSE]</span>')
-                .replace(/\[ALPHANUMERIC_ID\]/g, '<span class="pii-tag id">[ALPHANUMERIC_ID]</span>')
-                .replace(/\[FIRST_NAME\]/g, '<span class="pii-tag name">[FIRST_NAME]</span>')
-                .replace(/\[LAST_NAME\]/g, '<span class="pii-tag name">[LAST_NAME]</span>')
-                .replace(/\[CURRENCY_AMOUNT\]/g, '<span class="pii-tag credit_card">[CURRENCY_AMOUNT]</span>')
-                .replace(/\[CREDIT_CARD_NUMBER\]/g, '<span class="pii-tag credit_card">[CREDIT_CARD_NUMBER]</span>')
-                .replace(/\[INSURANCE_ID\]/g, '<span class="pii-tag id">[INSURANCE_ID]</span>');
-        }
+function formatOutput(text) {
+    return text
+        // Generic MASKED tag (used by base model)
+        .replace(/\[MASKED\]/g, '<span class="pii-tag id">[MASKED]</span>')
         
+        // Standard tags
+        .replace(/\[NAME\]/g, '<span class="pii-tag name">[NAME]</span>')
+        .replace(/\[PHONE\]/g, '<span class="pii-tag phone">[PHONE]</span>')
+        .replace(/\[EMAIL\]/g, '<span class="pii-tag email">[EMAIL]</span>')
+        .replace(/\[SSN\]/g, '<span class="pii-tag ssn">[SSN]</span>')
+        .replace(/\[ADDRESS\]/g, '<span class="pii-tag address">[ADDRESS]</span>')
+        .replace(/\[DATE\]/g, '<span class="pii-tag date">[DATE]</span>')
+        .replace(/\[CREDIT_CARD\]/g, '<span class="pii-tag credit_card">[CREDIT_CARD]</span>')
+        .replace(/\[ID\]/g, '<span class="pii-tag id">[ID]</span>')
+        
+        // Variations from finetuned model
+        .replace(/\[PHONE_NUMBER\]/g, '<span class="pii-tag phone">[PHONE_NUMBER]</span>')
+        .replace(/\[EMAIL_ADDRESS\]/g, '<span class="pii-tag email">[EMAIL_ADDRESS]</span>')
+        .replace(/\[STREET_ADDRESS\]/g, '<span class="pii-tag address">[STREET_ADDRESS]</span>')
+        .replace(/\[CITY\]/g, '<span class="pii-tag address">[CITY]</span>')
+        .replace(/\[STATE\]/g, '<span class="pii-tag address">[STATE]</span>')
+        .replace(/\[ZIP_CODE\]/g, '<span class="pii-tag address">[ZIP_CODE]</span>')
+        .replace(/\[ZIP\]/g, '<span class="pii-tag address">[ZIP]</span>')
+        
+        // Additional common variations
+        .replace(/\[PERSON\]/g, '<span class="pii-tag name">[PERSON]</span>')
+        .replace(/\[LOCATION\]/g, '<span class="pii-tag address">[LOCATION]</span>')
+        .replace(/\[DOB\]/g, '<span class="pii-tag date">[DOB]</span>')
+        .replace(/\[BIRTH_DATE\]/g, '<span class="pii-tag date">[BIRTH_DATE]</span>')
+        .replace(/\[DATE_OF_BIRTH\]/g, '<span class="pii-tag date">[DATE_OF_BIRTH]</span>')
+        .replace(/\[SOCIAL_SECURITY\]/g, '<span class="pii-tag ssn">[SOCIAL_SECURITY]</span>')
+        .replace(/\[CREDIT\]/g, '<span class="pii-tag credit_card">[CREDIT]</span>')
+        .replace(/\[CC\]/g, '<span class="pii-tag credit_card">[CC]</span>')
+        .replace(/\[ID_NUMBER\]/g, '<span class="pii-tag id">[ID_NUMBER]</span>')
+        .replace(/\[MEDICAL_RECORD\]/g, '<span class="pii-tag id">[MEDICAL_RECORD]</span>')
+        .replace(/\[MRN\]/g, '<span class="pii-tag id">[MRN]</span>')
+        .replace(/\[ACCOUNT\]/g, '<span class="pii-tag id">[ACCOUNT]</span>')
+        .replace(/\[LICENSE\]/g, '<span class="pii-tag id">[LICENSE]</span>')
+        .replace(/\[ALPHANUMERIC_ID\]/g, '<span class="pii-tag id">[ALPHANUMERIC_ID]</span>')
+        .replace(/\[FIRST_NAME\]/g, '<span class="pii-tag name">[FIRST_NAME]</span>')
+        .replace(/\[LAST_NAME\]/g, '<span class="pii-tag name">[LAST_NAME]</span>')
+        .replace(/\[CURRENCY_AMOUNT\]/g, '<span class="pii-tag credit_card">[CURRENCY_AMOUNT]</span>')
+        .replace(/\[CREDIT_CARD_NUMBER\]/g, '<span class="pii-tag credit_card">[CREDIT_CARD_NUMBER]</span>')
+        .replace(/\[INSURANCE_ID\]/g, '<span class="pii-tag id">[INSURANCE_ID]</span>')
+        
+        // Healthcare/PHI specific tags (from finetuned model)
+        .replace(/\[PATIENT_NAME\]/g, '<span class="pii-tag name">[PATIENT_NAME]</span>')
+        .replace(/\[MEDICAL_LICENSE_NUMBER\]/g, '<span class="pii-tag id">[MEDICAL_LICENSE_NUMBER]</span>')
+        .replace(/\[EMPLOYEE_ID\]/g, '<span class="pii-tag id">[EMPLOYEE_ID]</span>')
+        .replace(/\[SOCIAL_SECURITY_NUMBER\]/g, '<span class="pii-tag ssn">[SOCIAL_SECURITY_NUMBER]</span>')
+        .replace(/\[MEDICAL_RECORD_NUMBER\]/g, '<span class="pii-tag id">[MEDICAL_RECORD_NUMBER]</span>')
+        .replace(/\[INSURANCE_POLICY\]/g, '<span class="pii-tag id">[INSURANCE_POLICY]</span>')
+        .replace(/\[NPI\]/g, '<span class="pii-tag id">[NPI]</span>')
+        .replace(/\[PROVIDER_NAME\]/g, '<span class="pii-tag name">[PROVIDER_NAME]</span>')
+        .replace(/\[DIAGNOSIS\]/g, '<span class="pii-tag id">[DIAGNOSIS]</span>')
+        .replace(/\[MEDICATION\]/g, '<span class="pii-tag id">[MEDICATION]</span>')
+        .replace(/\[HEALTH_PLAN\]/g, '<span class="pii-tag id">[HEALTH_PLAN]</span>')
+        .replace(/\[PATIENT_IDENTIFIER\]/g, '<span class="pii-tag id">[PATIENT_IDENTIFIER]</span>')
+        .replace(/\[INSURANCE_POLICY_NUMBER\]/g, '<span class="pii-tag id">[INSURANCE_POLICY_NUMBER]</span>')
+        .replace(/\[POLICY_NUMBER\]/g, '<span class="pii-tag id">[POLICY_NUMBER]</span>');
+}
         // Process PII
         async function processPII() {
             const inputText = document.getElementById('inputText').value.trim();
