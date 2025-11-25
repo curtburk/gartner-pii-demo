@@ -7,10 +7,10 @@ echo "======================================"
 echo ""
 
 # Get the hostname/IP of the Linux server
-HOSTNAME=$(hostname -I | awk '{print $1}')
+SERVER_IP=$(hostname -I | awk '{print $1}')
 
 echo "Server Information:"
-echo "  Hostname/IP: $HOSTNAME"
+echo "  Hostname/IP: $SERVER_IP"
 echo ""
 
 # Kill any existing processes on the ports
@@ -90,7 +90,7 @@ cleanup() {
     
     # Restore original index.html
     cd frontend
-    sed -i "s|const API_URL = .*|const API_URL = 'http://192.168.10.123:8000';|" index.html
+    sed -i "s|const API_URL = .*|const API_URL = 'http://${SERVER_IP}:8000';|" index.html
     cd ..
     
     echo "✔ Demo stopped"
