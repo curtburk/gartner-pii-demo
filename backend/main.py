@@ -21,8 +21,8 @@ app.add_middleware(
 )
 
 # GGUF Model paths - TinyLlama vs Finetuned Qwen2.5-32B
-BASE_MODEL_PATH = "/home/curtburk/Desktop/Demo-projects/Fine-tuning-demo/llama.cpp/models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"
-FINETUNED_MODEL_PATH = "/home/curtburk/Desktop/Demo-projects/Fine-tuning-demo/llama.cpp/models/pii_detector_Q4_K_M.gguf"
+BASE_MODEL_PATH = "/home/curtburk/Desktop/gartner-pii-demo/models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"
+FINETUNED_MODEL_PATH = "/home/curtburk/Desktop/gartner-pii-demo/models/pii_detector_Q4_K_M.gguf"
 
 # Global variables for models
 base_model = None
