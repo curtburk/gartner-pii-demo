@@ -90,7 +90,7 @@ cleanup() {
     
     # Restore original index.html
     cd frontend
-    sed -i "s|const API_URL = .*|const API_URL = 'http://192.168.10.117:8000';|" index.html
+    sed -i "s|const API_URL = .*|const API_URL = 'http://192.168.10.123:8000';|" index.html
     cd ..
     
     echo "✔ Demo stopped"
