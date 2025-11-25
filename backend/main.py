@@ -63,7 +63,9 @@ def load_models():
             model_path=BASE_MODEL_PATH,
             n_gpu_layers=-1,  # Use GPU for all layers
             n_ctx=2048,       # Context window
-            n_batch=512,      # Batch size for prompt processing
+            n_batch=4096,
+            n_threads = 8,
+            flash_attn=True,      # Batch size for prompt processing
             verbose=False
         )
         print("TinyLlama loaded!")
@@ -73,7 +75,9 @@ def load_models():
             model_path=FINETUNED_MODEL_PATH,
             n_gpu_layers=-1,
             n_ctx=2048,
-            n_batch=512,
+            n_batch=4096,
+            n_threads = 8,
+            flash_attn=True, 
             verbose=False
         )
         print("Finetuned model loaded!")
@@ -88,25 +92,23 @@ def load_models():
 def create_pii_prompt(text: str, is_finetuned: bool = False) -> str:
     """Create appropriate prompt for PII masking task"""
     if is_finetuned:
-        # Finetuned Qwen model - use exact training format
-        system = "You are a specialized PII/PHI detection and masking assistant. You identify and mask sensitive information in text while preserving the document's readability."
-        instruction = f"Mask all personally identifiable information (PII) and protected health information (PHI) in the following document from the general domain:\n\n{text}"
-        
-        # Qwen format
-        prompt = f"<|im_start|>system\n{system}<|im_end|>\n<|im_start|>user\n{instruction}<|im_end|>\n<|im_start|>assistant\n"
+        # Shorter prompt - model was finetuned, doesn't need verbose instructions
+        prompt = f"<|im_start|>system\nMask all PII and PHI in text.<|im_end|>\n<|im_start|>user\n{text}<|im_end|>\n<|im_start|>assistant\n"
     else:
-        # TinyLlama base model - use few-shot example to guide behavior
-        example_input = "John Smith lives at 123 Main St. His SSN is 123-45-6789."
-        example_output = "[NAME] lives at [ADDRESS]. His SSN is [SSN]."
-        
-        prompt = f"<|system|>\nReplace personal information with [NAME], [SSN], [PHONE], [EMAIL], [ADDRESS], [DATE].</s>\n<|user|>\nInput: {example_input}\nOutput: {example_output}\n\nInput: {text}\nOutput:</s>\n<|assistant|>\n"
+        # TinyLlama base model - keep simple
+        prompt = f"<|system|>\nMask PII: [NAME], [SSN], [PHONE], [EMAIL], [ADDRESS], [DATE].</s>\n<|user|>\n{text}</s>\n<|assistant|>\n"
     
     return prompt
-
-def generate_with_gguf(model, prompt: str, max_tokens: int = 256, temperature: float = 0.1, model_type: str = "tinyllama") -> tuple:
+    
+def generate_with_gguf(model, prompt: str, max_tokens: int = 256, temperature: float = 0.1, model_type: str = "tinyllama", input_text: str = "") -> tuple:
     """Generate masked text using GGUF model"""
     start_time = time.time()
     
+    # Dynamic max_tokens based on input length
+    if input_text:
+        estimated = int(len(input_text.split()) * 1.5) + 30
+        max_tokens = min(max_tokens, max(estimated, 50))
+        
     try:
         # Different stop tokens for different models
         if model_type == "qwen":
@@ -116,16 +118,15 @@ def generate_with_gguf(model, prompt: str, max_tokens: int = 256, temperature: f
         
         # Adjust generation parameters based on model
         if model_type == "tinyllama":
-            # More aggressive settings to force English
             response = model(
                 prompt,
                 max_tokens=max_tokens,
-                temperature=0.3,  # Slightly higher for more variety
+                temperature=0.3,
                 top_p=0.9,
                 top_k=40,
                 stop=stop_tokens,
                 echo=False,
-                repeat_penalty=1.15  # Higher penalty to avoid repetition
+                repeat_penalty=1.15
             )
         else:
             response = model(
