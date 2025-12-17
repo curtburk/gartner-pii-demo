@@ -182,8 +182,6 @@ The demo includes an offline test endpoint that uses regex-based masking if mode
 
 ## Further talking points around the Demo (What, Why and How)
 
-## Sales and Marketing Talking Points
-
 ### The Problem We Solve
 - **Data Privacy Compliance Challenge**: Enterprises struggle with protecting sensitive customer and employee data (PII/PHI) in documents, emails, and databases while maintaining operational efficiency
 - **Cloud Dependency Risks**: Current AI solutions require sending sensitive data to cloud providers for processing, creating potential security vulnerabilities and compliance violations
