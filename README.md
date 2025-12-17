@@ -180,5 +180,33 @@ The demo includes an offline test endpoint that uses regex-based masking if mode
 - Emphasize the local processing capability of the HP ZGX Nano
 - All processing happens on-device, ensuring data privacy
 
+## Further talking points around the Demo (What, Why and How)
+
+## Sales and Marketing Talking Points
+
+### The Problem We Solve
+- **Data Privacy Compliance Challenge**: Enterprises struggle with protecting sensitive customer and employee data (PII/PHI) in documents, emails, and databases while maintaining operational efficiency
+- **Cloud Dependency Risks**: Current AI solutions require sending sensitive data to cloud providers for processing, creating potential security vulnerabilities and compliance violations
+- **Generic AI Limitations**: Off-the-shelf AI models fail to accurately identify and mask PII consistently, leading to data leaks and regulatory exposure
+- **GDPR/HIPAA Compliance**: Organizations face millions in potential fines for mishandling personal data, with regulations becoming increasingly strict globally
+
+### How We Solve It
+- **100% Local Processing**: The HP ZGX Nano runs AI models entirely on-premises, ensuring sensitive data never leaves your infrastructure
+- **Custom Fine-tuning Capability**: Transform generic AI models into specialized PII detection systems tailored to your specific data formats and requirements
+- **Enterprise-Grade Performance**: Process documents with 32B+ parameter models locally, achieving cloud-level accuracy without cloud-level risks
+- **Dramatic Accuracy Improvement**: Fine-tuned models show 6x better PII detection accuracy compared to base models on average
+- **Real-time Processing**: Instant PII masking without network latency or API rate limits
+
+### Why It's Important
+- **Data Sovereignty**: Complete control over where your data lives and how it's processed - critical for regulated industries like healthcare, finance, and government
+- **Regulatory Compliance**: Meet stringent data protection requirements (GDPR, HIPAA, CCPA) by ensuring sensitive data never leaves your secure environment
+- **Competitive Advantage**: Process sensitive customer data faster than competitors relying on cloud services, without security review delays
+- **Cost Predictability**: Eliminate recurring cloud AI API costs - one-time hardware investment with unlimited processing
+- **Trust and Reputation**: Demonstrate to customers that their data privacy is paramount by processing everything locally
+- **Immediate ROI**: Reduce data breach risk while accelerating AI adoption across the enterprise
+
+### Key Differentiator Message
+"While competitors send your sensitive data to the cloud for AI processing, the HP ZGX Nano brings enterprise AI to your data - delivering the same powerful capabilities without ever compromising security or compliance."
+
 ## Support
 For issues or questions about this demo, please contact Curtis Burkhalter at curtis.burkhalter@hp.com
