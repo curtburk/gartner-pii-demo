@@ -38,6 +38,68 @@ echo ""
 echo "Installing PyTorch with CUDA support..."
 pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu130
 
+
+# ============================================================================
+# CUDA 13 / GB10 Blackwell Configuration
+# ============================================================================
+echo ""
+echo "======================================"
+echo "🔧 Configuring for GB10 Blackwell GPU"
+echo "======================================"
+
+# Check for CUDA 13
+CUDA13_NVCC="/usr/local/cuda-13.0/bin/nvcc"
+if [ -f "$CUDA13_NVCC" ]; then
+    echo "✓ Found CUDA 13 compiler: $CUDA13_NVCC"
+    
+    echo ""
+    echo "Installing llama-cpp-python with CUDA 13 support..."
+    echo "This may take several minutes to compile..."
+    echo ""
+    
+    # Build llama-cpp-python with correct CUDA 13 compiler for Blackwell
+    CMAKE_ARGS="-DGGML_CUDA=on -DCMAKE_CUDA_COMPILER=$CUDA13_NVCC -DCMAKE_CUDA_ARCHITECTURES=120" \
+        pip install llama-cpp-python --no-cache-dir --force-reinstall
+    
+    if [ $? -eq 0 ]; then
+        echo "✓ llama-cpp-python installed with CUDA 13 / Blackwell support"
+    else
+        echo "❌ Failed to build llama-cpp-python with CUDA support"
+        echo "Falling back to CPU-only version..."
+        pip install llama-cpp-python
+    fi
+else
+    echo "⚠️  CUDA 13 not found at $CUDA13_NVCC"
+    echo "Checking for other CUDA installations..."
+    
+    # Try to find any CUDA installation
+    if [ -d "/usr/local/cuda" ]; then
+        CUDA_NVCC="/usr/local/cuda/bin/nvcc"
+        if [ -f "$CUDA_NVCC" ]; then
+            CUDA_VERSION=$($CUDA_NVCC --version | grep "release" | sed 's/.*release //' | sed 's/,.*//')
+            echo "Found CUDA $CUDA_VERSION at $CUDA_NVCC"
+            
+            CMAKE_ARGS="-DGGML_CUDA=on -DCMAKE_CUDA_COMPILER=$CUDA_NVCC" \
+                pip install llama-cpp-python --no-cache-dir --force-reinstall
+        fi
+    else
+        echo "No CUDA found. Installing CPU-only version..."
+        pip install llama-cpp-python
+    fi
+fi
+
+# Verify llama-cpp-python installation
+echo ""
+echo "Verifying llama-cpp-python installation..."
+if python3 -c "from llama_cpp import Llama; print('✓ llama-cpp-python OK')" 2>/dev/null; then
+    echo "✓ llama-cpp-python installed successfully"
+else
+    echo "❌ llama-cpp-python installation failed"
+    exit 1
+fi
+# ============================================================================
+# ============================================================================
+
 # Install backend dependencies
 echo ""
 echo "Installing dependencies..."
